@@ -34,9 +34,14 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'email' => 'required|unique:users',
+            'email' => 'required|email',
             'password' => 'required|confirmed',
         ]);
+
+        // Cek apakah email sudah digunakan
+        if (User::where('email', $request->email)->exists()) {
+            return back()->withErrors(['email' => 'Email is already registered. Please use another email.'])->withInput();
+        }
 
         User::create([
             'name' => $request->name,
@@ -45,9 +50,8 @@ class AuthController extends Controller
             'role' => 'user'
         ]);
 
-        return redirect('/login')->with('success', 'Registration successful!');
+        return redirect('/login')->with('success', 'Registration successful! Please login.');
     }
-
 
     public function logout()
     {
