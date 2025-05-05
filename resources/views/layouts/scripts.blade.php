@@ -16,7 +16,7 @@
 <!-- ChartJS -->
 <script src="{{ asset('AdminLTE-3.2.0/plugins/chart.js/Chart.min.js') }}"></script>
 
-<!-- AdminLTE for demo purposes -->
+{{-- <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('AdminLTE-3.2.0/dist/js/demo.js') }}"></script>
 <!-- AdminLTE dashboard demo -->
-<script src="{{ asset('AdminLTE-3.2.0/dist/js/pages/dashboard2.js') }}"></script>
+<script src="{{ asset('AdminLTE-3.2.0/dist/js/pages/dashboard2.js') }}"></script> --}}
