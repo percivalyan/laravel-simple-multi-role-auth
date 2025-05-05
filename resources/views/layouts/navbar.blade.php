@@ -38,69 +38,47 @@
         </li>
 
         <!-- Messages Dropdown Menu -->
+        <!-- Log Aktivitas (untuk admin & user) -->
         <li class="nav-item dropdown">
-            <a class="nav-link" data-toggle="dropdown" href="#">
-                <i class="far fa-comments"></i>
-                <span class="badge badge-danger navbar-badge">3</span>
+            <a class="nav-link" data-toggle="dropdown" href="#" title="Recent Activity">
+                <i class="fas fa-history"></i>
+                @if (count($navbar_logs))
+                    <span class="badge badge-info navbar-badge">{{ count($navbar_logs) }}</span>
+                @endif
             </a>
-            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                <a href="#" class="dropdown-item">
-                    <!-- Message Start -->
-                    <div class="media">
-                        <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle" />
-                        <div class="media-body">
-                            <h3 class="dropdown-item-title">
-                                Brad Diesel
-                                <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                            </h3>
-                            <p class="text-sm">Call me whenever you can...</p>
-                            <p class="text-sm text-muted">
-                                <i class="far fa-clock mr-1"></i> 4 Hours Ago
-                            </p>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right p-2">
+                <span class="dropdown-item dropdown-header text-sm">
+                    {{ count($navbar_logs) }} Recent Activities
+                </span>
+                <div class="dropdown-divider my-1"></div>
+                @forelse ($navbar_logs as $log)
+                    <a href="#" class="dropdown-item py-1 px-2 text-sm">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-user-clock mr-2 mt-1 text-primary"></i>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between">
+                                    <strong>{{ $log->user->name ?? 'Guest' }}</strong>
+                                    <span class="badge badge-primary badge-sm">{{ strtoupper($log->action) }}</span>
+                                </div>
+                                <div class="text-muted small">
+                                    {{ \Illuminate\Support\Str::limit($log->description, 40) }}
+                                </div>
+                                <div class="text-muted small">
+                                    {{ \Carbon\Carbon::createFromTimestamp($log->last_activity)->diffForHumans() }}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <!-- Message End -->
+                    </a>
+                    <div class="dropdown-divider my-1"></div>
+                @empty
+                    <span class="dropdown-item text-muted text-sm">No activity found</span>
+                @endforelse
+                <a href="{{ route('session.logs') }}" class="dropdown-item dropdown-footer text-sm">
+                    View All Logs
                 </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <!-- Message Start -->
-                    <div class="media">
-                        <img src="dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3" />
-                        <div class="media-body">
-                            <h3 class="dropdown-item-title">
-                                John Pierce
-                                <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                            </h3>
-                            <p class="text-sm">I got your message bro</p>
-                            <p class="text-sm text-muted">
-                                <i class="far fa-clock mr-1"></i> 4 Hours Ago
-                            </p>
-                        </div>
-                    </div>
-                    <!-- Message End -->
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <!-- Message Start -->
-                    <div class="media">
-                        <img src="dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3" />
-                        <div class="media-body">
-                            <h3 class="dropdown-item-title">
-                                Nora Silvester
-                                <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-                            </h3>
-                            <p class="text-sm">The subject goes here</p>
-                            <p class="text-sm text-muted">
-                                <i class="far fa-clock mr-1"></i> 4 Hours Ago
-                            </p>
-                        </div>
-                    </div>
-                    <!-- Message End -->
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
             </div>
         </li>
+
         <!-- Notifications Dropdown Menu -->
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">

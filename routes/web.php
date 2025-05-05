@@ -29,7 +29,8 @@ Route::middleware([RoleMiddleware::class . ':admin'])->prefix('admin')->group(fu
         return view('admin');
     })->name('admin.dashboard');
 
-    Route::get('/logs', [SessionLogController::class, 'index'])->name('admin.logs');
+    Route::get('/admin/sessions', [SessionLogController::class, 'index'])->name('session.logs');
+    Route::delete('/admin/sessions/{id}', [SessionLogController::class, 'destroy'])->name('session.logs.destroy');
 });
 
 Route::middleware(['auth', RoleMiddleware::class . ':user'])->get('/user', function () {

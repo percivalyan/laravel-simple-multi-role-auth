@@ -9,18 +9,19 @@
             </div>
 
             <div class="card-body table-responsive p-0" style="max-height: 500px;">
-                <table class="table table-head-fixed text-nowrap">
-                    <thead>
+                <table class="table table-sm table-hover table-striped text-sm text-nowrap align-middle">
+                    <thead class="thead-dark">
                         <tr>
                             <th>No</th>
                             <th>User</th>
                             <th>Role</th>
                             <th>Action</th>
                             <th>Description</th>
-                            <th>IP Address</th>
+                            <th>IP</th>
                             <th>User Agent</th>
                             <th>Payload</th>
                             <th>Last Activity</th>
+                            <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,25 +37,33 @@
                             <td>
                                 <span class="badge badge-primary">{{ strtoupper($session->action) }}</span>
                             </td>
-                            <td>{{ $session->description }}</td>
+                            <td>{{ \Illuminate\Support\Str::limit($session->description, 50) }}</td>
                             <td>{{ $session->ip_address }}</td>
-                            <td>
-                                {{ \Illuminate\Support\Str::limit($session->user_agent, 200) }}
+                            <td style="max-width: 250px;">
+                                <small class="d-block text-wrap">{{ \Illuminate\Support\Str::limit($session->user_agent, 100) }}</small>
+                            </td>
+                            <td style="max-width: 300px;">
+                                <code class="d-block text-wrap">{{ \Illuminate\Support\Str::limit($session->payload, 300) }}</code>
                             </td>
                             <td>
-                                <code style="white-space: pre-wrap;">{{ \Illuminate\Support\Str::limit($session->payload, 500) }}</code>
-                            </td>
-                            <td>
-                                {{ \Carbon\Carbon::createFromTimestamp($session->last_activity)->toDayDateTimeString() }}
-                                <br>
+                                {{ \Carbon\Carbon::createFromTimestamp($session->last_activity)->toDayDateTimeString() }}<br>
                                 <small class="text-muted">
                                     {{ \Carbon\Carbon::createFromTimestamp($session->last_activity)->diffForHumans() }}
                                 </small>
                             </td>
+                            <td>
+                                @if (Auth::user()->role === 'admin')
+                                <form action="{{ route('session.logs.destroy', $session->id) }}" method="POST" onsubmit="return confirm('Are you sure?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-danger btn-sm" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                                </form>
+                                @endif
+                            </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="9" class="text-center text-muted">No session activity found.</td>
+                            <td colspan="10" class="text-center text-muted">No session activity found.</td>
                         </tr>
                         @endforelse
                     </tbody>
