@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\RoleMiddleware;
+use App\Http\Controllers\SessionLogController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -23,8 +24,12 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware('auth');
 
-Route::middleware(['auth', RoleMiddleware::class . ':admin'])->get('/admin', function () {
-    return view('admin');
+Route::middleware([RoleMiddleware::class . ':admin'])->prefix('admin')->group(function () {
+    Route::get('/', function () {
+        return view('admin');
+    })->name('admin.dashboard');
+
+    Route::get('/logs', [SessionLogController::class, 'index'])->name('admin.logs');
 });
 
 Route::middleware(['auth', RoleMiddleware::class . ':user'])->get('/user', function () {

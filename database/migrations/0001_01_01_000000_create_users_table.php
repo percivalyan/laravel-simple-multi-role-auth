@@ -32,8 +32,10 @@ return new class extends Migration
             $table->string('id')->primary();
             $table->foreignId('user_id')->nullable()->index();
             $table->string('ip_address', 45)->nullable();
+            $table->string('action')->nullable();
+            $table->string('description')->nullable();
             $table->text('user_agent')->nullable();
-            $table->longText('payload');
+            $table->longText('payload')->nullable();
             $table->integer('last_activity')->index();
         });
     }
