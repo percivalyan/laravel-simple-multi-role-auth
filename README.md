@@ -25,7 +25,6 @@
 - PHP 8.2.12 or higher
 - Composer 2.8.6 or higher
 - MySQL 5.7+ or MariaDB 10.3+
-- Node.js (if using frontend assets)
 - XAMPP/WAMP/LAMP (optional)
 
 ## Installation
