@@ -43,7 +43,7 @@
                                 <small class="d-block text-wrap">{{ \Illuminate\Support\Str::limit($session->user_agent, 100) }}</small>
                             </td>
                             <td style="max-width: 300px;">
-                                <code class="d-block text-wrap">{{ \Illuminate\Support\Str::limit($session->payload, 300) }}</code>
+                                <code class="d-block text-wrap">{{ \Illuminate\Support\Str::limit($session->payload, 1000) }}</code>
                             </td>
                             <td>
                                 {{ \Carbon\Carbon::createFromTimestamp($session->last_activity)->toDayDateTimeString() }}<br>
