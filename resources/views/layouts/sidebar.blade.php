@@ -45,6 +45,17 @@
                     </a>
                 </li>
 
+                @if(Auth::check() && Auth::user()->role === 'admin')
+                    <!-- Admin-only Menu -->
+                    <li class="nav-item">
+                        <a href="{{ route('admin.users.index') }}"
+                            class="nav-link {{ request()->is('admin/users*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-users-cog"></i>
+                            <p>Manajemen Pengguna</p>
+                        </a>
+                    </li>
+                @endif
+
                 <!-- Logout -->
                 <li class="nav-item">
                     <a href="{{ url('/logout') }}" class="nav-link">
