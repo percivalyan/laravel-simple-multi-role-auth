@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Session; // Assuming you have a Session model for logging
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -32,11 +36,23 @@ class UserController extends Controller
             'role' => 'required|in:admin,editor,user',
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
+        ]);
+
+        // Log the user creation action
+        Session::create([
+            'id' => Str::uuid(),
+            'user_id' => Auth::id(),
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'action' => 'create_user',
+            'description' => 'User created: ' . $user->name,
+            'payload' => json_encode(['email' => $request->email, 'role' => $request->role]),
+            'last_activity' => Carbon::now()->timestamp,
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'User berhasil dibuat.');
@@ -70,16 +86,39 @@ class UserController extends Controller
             ]);
         }
 
+        // Log the user update action
+        Session::create([
+            'id' => Str::uuid(),
+            'user_id' => Auth::id(),
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'action' => 'update_user',
+            'description' => 'User updated: ' . $user->name,
+            'payload' => json_encode(['email' => $request->email, 'role' => $request->role]),
+            'last_activity' => Carbon::now()->timestamp,
+        ]);
+
         return redirect()->route('admin.users.index')->with('success', 'User berhasil diupdate.');
-    }  
+    }
 
     // Hapus user
-public function destroy(User $user)
-{
-    // Menghapus user
-    $user->delete();
+    public function destroy(User $user)
+    {
+        // Log the user deletion action
+        Session::create([
+            'id' => Str::uuid(),
+            'user_id' => Auth::id(),
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+            'action' => 'delete_user',
+            'description' => 'User deleted: ' . $user->name,
+            'payload' => json_encode(['email' => $user->email]),
+            'last_activity' => Carbon::now()->timestamp,
+        ]);
 
-    return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus.');
-}
+        // Menghapus user
+        $user->delete();
 
+        return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus.');
+    }
 }
