@@ -51,7 +51,7 @@
                         <a href="{{ route('admin.users.index') }}"
                             class="nav-link {{ request()->is('admin/users*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-users-cog"></i>
-                            <p>Manajemen Pengguna</p>
+                            <p>User Management</p>
                         </a>
                     </li>
                 @endif
